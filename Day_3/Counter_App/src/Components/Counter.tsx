@@ -21,7 +21,7 @@ const Counter = () => {
     }
 
   return (
-    <div>
+    <div id='box'>
         <h1>Counter App</h1>
         <h3>Count: {count}</h3>
         <button onClick={()=> increase()}>Increase</button>

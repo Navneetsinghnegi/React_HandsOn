@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import UserForm from './Components/UserForm';
-import UserCard from './Components/UserCard';
+
 import UserList from './Components/UserList';
 
 export interface UserProfile{
