@@ -1,19 +1,35 @@
 import React, { useState } from 'react'
 
+interface ToDo {
+  id:number,
+  text:string,
+  completed : boolean
+}
+
 const ToDo = () => {
     const [task, setTask] = useState<string>("");
-    const [todos, setTodos] = useState<string[]>([])
+    const [todos, setTodos] = useState<ToDo[]>([])
 
    const addTodo = () => {
-    if (task.trim() === "") return;
+      if (task.trim() === "") return;
 
-    setTodos(prevTodos => [...prevTodos, task.trim()]);
-    setTask("");
-  };
+      const newToDo : ToDo = {
+        id:Date.now(),
+        text : task.trim(),
+        completed: false
+      }
 
-    const deleteTodo = (index: number) => {
+      setTodos(prev => [...prev, newToDo]);
+      setTask("");
+    };
+
+    const isComplete = (id:number)=>{
+     setTodos(prevTodos => prevTodos.map(todo => todo.id ===id? {...todo, completed: !todo.completed}: todo));
+    }
+
+    const deleteTodo = (id: number) => {
     setTodos(prevTodos =>
-      prevTodos.filter((_, i) => i !== index)
+      prevTodos.filter(todo=>todo.id !==id)
     );
   };
 
@@ -28,19 +44,22 @@ const ToDo = () => {
         value={task}
         onChange={(e) => setTask(e.target.value)}
         placeholder="Enter a task"
+        onKeyDown={(e)=> {
+          if(e.key === "Enter") addTodo()
+        }}
       />
-      <button onClick={addTodo}>Add</button>
+      
 
       {/* Todo List */}
       {todos.length === 0 ? (
         <p>No tasks available</p>
       ) : (
         <ul>
-          {todos.map((todo, index) => (
-            <li key={index} style={{ margin: "8px 0" }}>
-              {todo}
+          {todos.map((todo) => (
+            <li key={todo.id} onClick={()=>isComplete(todo.id)} style={{ textDecoration: todo.completed? "line-through" : "none", cursor:"pointer"}}>
+              {todo.text}
               <button
-                onClick={() => deleteTodo(index)}
+                onClick={() => deleteTodo(todo.id)}
                 style={{ marginLeft: "10px" }}
               >
                 Delete
